@@ -1,17 +1,14 @@
-const express = require('express');
 const fetch = require('node-fetch');
-const app = express();
 
-app.get('/api/token-data', async (req, res) => {
+module.exports = async (req, res) => {
+    const apiUrl = process.env.DEX_API_URL || 'https://api.dexscreener.com/latest/dex/tokens/0xc0ba93a810adb498900c82bb6f7c16ca3046dfa7b6f364ec985595fdeb1ee9ad::suimon::SUIMON';
+    
     try {
-        const response = await fetch('https://api.dexscreener.com/latest/dex/tokens/0xc0ba93a810adb498900c82bb6f7c16ca3046dfa7b6f364ec985595fdeb1ee9ad::suimon::SUIMON');
+        const response = await fetch(apiUrl);
         const data = await response.json();
-        res.json(data);
+        res.status(200).json(data);
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).json({ error: 'Failed to fetch token data' });
     }
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+};
